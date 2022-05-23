@@ -120,6 +120,8 @@ def detect(opt):
     # Run tracking
     model.warmup(imgsz=(1 if pt else nr_sources, 3, *imgsz))  # warmup
     dt, seen = [0.0, 0.0, 0.0, 0.0], 0
+    #Counting the same class
+    count = []
     for frame_idx, (path, im, im0s, vid_cap, s) in enumerate(dataset):
         t1 = time_sync()
         im = torch.from_numpy(im).to(device)
@@ -192,8 +194,11 @@ def detect(opt):
 
                         bboxes = output[0:4]
                         id = output[4]
-                        cls = output[5]
+                        cls = output[5]                        
                         conf = output[6]
+                        
+                        if cls == 0 and conf > 0.6:
+                          count.append(id)
 
                         if save_txt:
                             # to MOT format
@@ -251,6 +256,9 @@ def detect(opt):
         LOGGER.info(f"Results saved to {colorstr('bold', save_dir)}{s}")
     if update:
         strip_optimizer(yolo_model)  # update model (to fix SourceChangeWarning)
+    #Print the counting results
+    count = sorted(count)
+    print('Count: ', len(count)
 
 
 if __name__ == '__main__':
