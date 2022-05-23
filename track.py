@@ -258,7 +258,7 @@ def detect(opt):
         strip_optimizer(yolo_model)  # update model (to fix SourceChangeWarning)
     #Print the counting results
     count = sorted(count)
-    print('Count: ', len(count)
+    print('Count: ', len(count))
 
 
 if __name__ == '__main__':
